@@ -1,28 +1,3 @@
-'''
-Your parking gargage class should have the following methods:
-
-- takeTicket
-- This should decrease the amount of tickets available by 1
-- This should decrease the amount of parkingSpaces available by 1
-
-- payForParking
-- Display an input that waits for an amount from the user and store it in a variable
-- If the payment variable is not empty then (meaning the ticket has been paid) -> display a message to the user that their ticket has been paid and they have 15mins to leave
-- This should update the "currentTicket" dictionary key "paid" to True
-
--leaveGarage
-- If the ticket has been paid, display a message of "Thank You, have a nice day"
-- If the ticket has not been paid, display an input prompt for payment
-- Once paid, display message "Thank you, have a nice day!"
-- Update parkingSpaces list to increase by 1 (meaning add to the parkingSpaces list)
-- Update tickets list to increase by 1 (meaning add to the tickets list)
-
-
-You will need a few attributes as well:
-- tickets -> list
-- parkingSpaces -> list
-- currentTicket -> dictionary
-'''
 class Garage():
 
     def __init__(self): # initialize class instances
@@ -37,11 +12,10 @@ class Garage():
             if x in self.takentickets:
                 continue
             else:
-                space = int(input(f'Which parking spot do you want to park? Please choose a spot among these currently available parking spots: {self.parkingspaces}'))
+                space = int(input(f'Which parking spot do you want to park? Please choose a spot among these currently available parking spots: {self.parkingspaces}\n'))
                 try:
-                    if space not in self.parkingspaces:
-                        space = int(input(f'This parking spot is not available. Please choose your spot again among these currently available parking spots: {self.parkingspaces}'))
-                        
+                    while space not in self.parkingspaces:
+                        space = int(input(f'This parking spot is not available. Please choose your spot again among these currently available parking spots: {self.parkingspaces}\n'))
                     self.takenparkingspaces.append(space)
                     self.parkingspaces.remove(space)
                     self.takentickets.append(x)
@@ -57,28 +31,28 @@ class Garage():
                     break
 
                 except ValueError:
-                    print(f'{space} is not a valid parking spot. Please try again')
+                    print(f'{space} is not a valid parking spot. Please try again\n')
 
     def payforparking(self,payinput): # calculte payment amount that corresponds to the hours of parking
         try:
             if int(payinput) in self.takentickets:
-                costinput = input("How many hours did you stay? Please enter a number.")
+                costinput = input("How many hours did you stay? Please enter a number.\n")
                 try:
-                    finalinput = input(f'Your total is ${int(costinput)*5}. Please enter the payment amount to pay.')
+                    finalinput = input(f'Your total is ${int(costinput)*5}. Please enter the payment amount to pay.\n')
                     if int(finalinput) == int(costinput) * 5:
                         self.currentTicket[int(payinput)] = True
-                        print(f'Your ticket has been paid. You have 15 minutes to leave the garage.')
+                        print(f'Your ticket has been paid. You have 15 minutes to leave the garage.\n')
                     else: 
-                        print(f'Incorrect input. Please try again')
+                        print(f'Incorrect input. Please try again\n')
                 
                 except ValueError:
-                    print(f'{costinput} is not a valid number. Please try again.')
+                    print(f'{costinput} is not a valid number. Please try again.\n')
                 
             else:
-                print(f'{payinput} is not a valid ticket. Please try again.')
+                print(f'{payinput} is not a valid ticket. Please try again.\n')
            
         except ValueError:
-            print(f'{payinput} is not a valid ticket. Please try again')
+            print(f'{payinput} is not a valid ticket. Please try again\n')
         
     
     def leavegarage(self,ticketnumber, parkingspot): 
@@ -92,54 +66,51 @@ class Garage():
                     self.tickets.insert(0, int(ticketnumber))
                     self.takentickets.remove(int(ticketnumber))
                     del self.currentTicket[int(ticketnumber)]
-                    print(self.tickets)
-                    print(f'Thank you, have a nice day!')
+                    print(f'Thank you, have a nice day!\n')
                 elif self.currentTicket[int(ticketnumber)] == False:
-                    leavepay = input('Your ticket has not been paid. How many hours did you stay? Input a number.')
+                    leavepay = input('Your ticket has not been paid. How many hours did you stay? Input a number.\n')
                     try:
-                        leaveinput = input(f'Your total is ${int(leavepay)*5}. Please input the payment amount to pay.')
+                        leaveinput = input(f'Your total is ${int(leavepay)*5}. Please input the payment amount to pay.\n')
                         if int(leaveinput) == int(leavepay) * 5:
                             self.parkingspaces.append(parkingspot)
                             self.takenparkingspaces.remove(parkingspot)
                             self.tickets.insert(0, int(ticketnumber))
                             self.takentickets.remove(int(ticketnumber))
                             del self.currentTicket[int(ticketnumber)]
-                            print(self.tickets)
-                            print(f'Thank you, have a nice day!')
+                            print(f'Your ticket has been paid, now you can leave the garage. Thank you, have a nice day!\n')
                     
 #                         else: 
 #                             print(f'Incorrect payment. Please try again')
                         
                     except ValueError:
-                        print(f'Not a valid number. Please try again.')
+                        print(f'Not a valid number. Please try again.\n')
                 else:
-                    print(f'{ticketnumber} does not exist in our system. Please try again.')
+                    print(f'{ticketnumber} does not exist in our system. Please try again.\n')
             else:
-                print(f'{ticketnumber} is not a valid ticket. Please try again.')
+                print(f'{ticketnumber} is not a valid ticket. Please try again.\n')
         except ValueError:
-            print(f'{ticketnumber} is not a valid ticket. Please try again')
+            print(f'{ticketnumber} is not a valid ticket. Please try again.\n')
 
 
 def parkinggarage():
     ticket = Garage()
     while True: 
-        question1 = input("What would you like to do? Take ticket, pay for parking, leave garage, or exit garage without parking? Input 'take', 'pay', 'leave' or 'exit' ")
+        question1 = input("What would you like to do? Take ticket, pay for parking, leave garage, or exit garage without parking? Input 'take', 'pay', 'leave' or 'exit' \n")
         # 'exit' is for leaving the garage without parking (or for leaving the program when accidentally running it)
         if question1.lower().strip() == "take":
             ticket.taketicket()
         elif question1.lower().strip() == "pay":
-            pay = input("What is your ticket number?")
+            pay = input("What is your ticket number?\n")
             ticket.payforparking(pay)
         elif question1.lower().strip() == 'leave':
-            leave = input('What is your ticket number?')
-            spot = int(input('What is your parking spot number?'))
+            leave = input('What is your ticket number?\n')
+            spot = int(input('What is your parking spot number?\n'))
             ticket.leavegarage(leave,spot)
         elif question1.lower().strip() == 'exit':
-            print(f'Thank you! See you again!')
+            print(f'Thank you! See you again!\n')
             break
         else:
-            print('Invalid input. Please try again')
+            print('Invalid input. Please try again\n')
     
 parkinggarage()       
         
-
