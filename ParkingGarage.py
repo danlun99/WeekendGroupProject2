@@ -6,6 +6,7 @@ class Garage():
         self.takenparkingspaces = [] # store the parking spot that has been taken
         self.takentickets = [] # store the ticket number that has been taken
         self.currentTicket = {} # store payment status of each parking ticket
+        self.customerid = {}
 
     def taketicket(self): # distribute ticket numbers when customers decide to take parking tickets
         self.takenparkingspaces.sort()
@@ -25,6 +26,8 @@ class Garage():
                     self.takentickets.append(x)
                     self.tickets.remove(x)
                     self.currentTicket[x] = False
+                    self.customerid[x] = space
+                    print(f'{self.customerid}')
                     print(f'Your ticket number is {x}')
                     print(f'Your parking spot is {space}')
                     print(f'Payment Status: unpaid')
@@ -48,44 +51,40 @@ class Garage():
                         print(f'Your ticket has been paid. You have 15 minutes to leave the garage.\n')
                     else: 
                         print(f'Incorrect input. Please try again\n')
-                
                 except ValueError:
                     print(f'{costinput} is not a valid number. Please try again.\n')
-                
             else:
                 print(f'{payinput} is not a valid ticket. Please try again.\n')
-           
         except ValueError:
             print(f'{payinput} is not a valid ticket. Please try again\n')
         
-    
     def leavegarage(self,ticketnumber, parkingspot): 
         # check payment status of parking ticket, if already paid then customer can leave, 
         # if not it asks customer to pay for the parking ticket
         try:
-            if int(ticketnumber) in self.takentickets:
-                if self.currentTicket[int(ticketnumber)] == True:
+            if ticketnumber in self.takentickets:
+                if self.currentTicket[ticketnumber] == True:
                     self.parkingspaces.append(parkingspot)
                     self.takenparkingspaces.remove(parkingspot)
-                    self.tickets.insert(0, int(ticketnumber))
-                    self.takentickets.remove(int(ticketnumber))
-                    del self.currentTicket[int(ticketnumber)]
+                    self.tickets.insert(0, ticketnumber)
+                    self.takentickets.remove(ticketnumber)
+                    del self.currentTicket[ticketnumber]
                     print(f'Your ticket has been paid, now you can leave the garage. Thank you, have a nice day!\n')
-                elif self.currentTicket[int(ticketnumber)] == False:
+                elif self.currentTicket[ticketnumber] == False:
                     leavepay = input('Your ticket has not been paid. How many hours did you stay? Input a number.\n')
                     try:
-                        leaveinput = input(f'Your total is ${int(leavepay)*5}. Please input the payment amount to pay.\n')
-                        if int(leaveinput) == int(leavepay) * 5:
+                        leaveinput = int(input(f'Your total is ${int(leavepay)*5}. Please input the payment amount to pay.\n'))
+                        while leaveinput != int(leavepay)*5: # if the customer hasnt paid the correct amount, request the customer to re-enter the payment amount
+                            leaveinput = int(input(f'Incorrect payment. Please try again \n'))
+
+                        if leaveinput == int(leavepay) * 5: # if the customer has paid the correct amount, let the customer leave
                             self.parkingspaces.append(parkingspot)
                             self.takenparkingspaces.remove(parkingspot)
-                            self.tickets.insert(0, int(ticketnumber))
-                            self.takentickets.remove(int(ticketnumber))
-                            del self.currentTicket[int(ticketnumber)]
+                            self.tickets.insert(0, ticketnumber)
+                            self.takentickets.remove(ticketnumber)
+                            del self.currentTicket[ticketnumber]
                             print(f'Your ticket has been paid, now you can leave the garage. Thank you, have a nice day!\n')
-                    
-#                         else: 
-#                             print(f'Incorrect payment. Please try again')
-                        
+                                     
                     except ValueError:
                         print(f'Not a valid number. Please try again.\n')
                 else:
@@ -95,26 +94,27 @@ class Garage():
         except ValueError:
             print(f'{ticketnumber} is not a valid ticket. Please try again.\n')
 
-
-def parkinggarage():
-    ticket = Garage()
+def parkinggarage(): # operate the garage as call above-mentioned functions
+    ticket = Garage() #initialize Garage class
     while True: 
         question1 = input("What would you like to do? Take ticket, pay for parking, leave garage, or exit garage without parking? Input 'take', 'pay', 'leave' or 'exit' \n")
         # 'exit' is for leaving the garage without parking (or for leaving the program when accidentally running it)
-        if question1.lower().strip() == "take":
+        if question1.lower().strip() == "take": # calling take function if customer wants to take ticket
             ticket.taketicket()
-        elif question1.lower().strip() == "pay":
-            pay = input("What is your ticket number?\n")
+        elif question1.lower().strip() == "pay": # calling pay function if customer wants to pay for ticket
+            pay = int(input("What is your ticket number?\n"))
             ticket.payforparking(pay)
-        elif question1.lower().strip() == 'leave':
-            leave = input('What is your ticket number?\n')
+        elif question1.lower().strip() == 'leave': # calling leave function if customer wants to leave the garage
+            leave = int(input('What is your ticket number?\n'))
             spot = int(input('What is your parking spot number?\n'))
+            while leave in ticket.customerid.keys():
+                if spot != ticket.customerid[leave]:
+                    spot = int(input('This is not the parking spot that you have chosen, please try again\n'))
+                else: break
             ticket.leavegarage(leave,spot)
-        elif question1.lower().strip() == 'exit':
+        elif question1.lower().strip() == 'exit': # breaking out of the while loop if customer don't want to park in the garage
             print(f'Thank you! See you again!\n')
             break
         else:
             print('Invalid input. Please try again\n')
-    
-parkinggarage()       
-        
+   
