@@ -8,6 +8,10 @@ class Garage():
         self.currentTicket = {} # store payment status of each parking ticket
 
     def taketicket(self): # distribute ticket numbers when customers decide to take parking tickets
+        self.takenparkingspaces.sort()
+        self.parkingspaces.sort()
+        self.takentickets.sort()
+        self.tickets.sort()
         for x in self.tickets:
             if x in self.takentickets:
                 continue
@@ -66,7 +70,7 @@ class Garage():
                     self.tickets.insert(0, int(ticketnumber))
                     self.takentickets.remove(int(ticketnumber))
                     del self.currentTicket[int(ticketnumber)]
-                    print(f'Thank you, have a nice day!\n')
+                    print(f'Your ticket has been paid, now you can leave the garage. Thank you, have a nice day!\n')
                 elif self.currentTicket[int(ticketnumber)] == False:
                     leavepay = input('Your ticket has not been paid. How many hours did you stay? Input a number.\n')
                     try:
